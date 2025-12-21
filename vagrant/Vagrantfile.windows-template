@@ -1,0 +1,26 @@
+Vagrant.configure("2") do |config|
+  config.vm.communicator = "ssh"
+  config.ssh.username = "Administrator"
+  config.ssh.password = "P@ssword!"
+  config.ssh.retry_limit = 20
+  config.ssh.retry_delay = 30
+
+  config.vm.guest = :windows
+
+  config.vm.synced_folder ".", "/vagrant", disabled: true
+
+  config.vm.network :forwarded_port, guest: 3389, host: 3389, id: "rdp", auto_correct: true
+  config.vm.network :forwarded_port, guest: 22, host: 2222, id: "ssh", auto_correct: true
+
+  config.vm.provider "virtualbox" do |vb|
+    vb.gui = false
+    vb.memory = 4096
+    vb.cpus = 4
+  end
+
+  config.vm.provider "vmware_desktop" do |v|
+    v.gui = false
+    v.memory = 4096
+    v.vmx["numvcpus"] = "4"
+  end
+end

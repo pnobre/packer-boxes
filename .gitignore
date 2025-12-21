@@ -1,0 +1,8 @@
+**/packer_cache/**
+**/packer_*-iso
+**/*.box
+**/output*/**
+build/**
+test/**
+iso/*
+.fake
