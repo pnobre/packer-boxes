@@ -89,21 +89,21 @@ Write-Log "Applying some UI Tweaks"
 # Dont use visual styles on windows and buttons
 {Set-RegistryKey -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\ThemeManager' -Name ThemeActive -Type DWORD -Value 1}
 # Dont use common tasks in folders
-{Set-RegistryKey  -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced' -Name WebView -Type DWORD -Value 0}
+Set-RegistryKey  -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced' -Name WebView -Type DWORD -Value 0
 # Dont use drop shadows for icon labels on the desktop
-{Set-RegistryKey -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced' -Name ListviewShadow -Type DWORD -Value 0}
+Set-RegistryKey -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced' -Name ListviewShadow -Type DWORD -Value 0
 # Dont use a background image for each folder type
-{Set-RegistryKey -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced' -Name ListviewWatermark -Type DWORD -Value 0}
+Set-RegistryKey -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced' -Name ListviewWatermark -Type DWORD -Value 0
 # Dont slide taskbar buttons
-{Set-RegistryKey -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced' -Name TaskbarAnimations -Type DWORD -Value 0}
+Set-RegistryKey -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced' -Name TaskbarAnimations -Type DWORD -Value 0
 # Dont animate windows when minimizing and maximizing
-{Set-RegistryKey -Path 'HKCU:\Control Panel\Desktop\WindowMetrics' -Name MinAnimate -Type STRING -Value 0}
+Set-RegistryKey -Path 'HKCU:\Control Panel\Desktop\WindowMetrics' -Name MinAnimate -Type STRING -Value 0
 # Dont show window contents while dragging
-{Set-RegistryKey -Path 'HKCU:\Control Panel\Desktop' -Name DragFullWindows -Type STRING -Value 0}
+Set-RegistryKey -Path 'HKCU:\Control Panel\Desktop' -Name DragFullWindows -Type STRING -Value 0
 # Dont Smooth edges of screen fonts
-{Set-RegistryKey -Path 'HKCU:\Control Panel\Desktop' -Name FontSmoothing -Type STRING -Value 0}
+Set-RegistryKey -Path 'HKCU:\Control Panel\Desktop' -Name FontSmoothing -Type STRING -Value 0
 # Dont show shadows under menus
-{Set-RegistryKey -Path 'HKCU:\Control Panel\Desktop' -Name UserPreferencesMask -Type BINARY -Value (90,12,01,80)}
+Set-RegistryKey -Path 'HKCU:\Control Panel\Desktop' -Name UserPreferencesMask -Type BINARY -Value (90,12,01,80)
 
 Write-Log 'Setting the vagrant account properties...'
 # see the ADS_USER_FLAG_ENUM enumeration at https://msdn.microsoft.com/en-us/library/aa772300(v=vs.85).aspx
