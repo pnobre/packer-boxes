@@ -29,7 +29,7 @@ build {
     inline = [
       "$ErrorActionPreference = 'Stop'",
       "Set-ExecutionPolicy Bypass -Scope Process -Force",
-      "& C:\\Windows\\Temp\\provision.ps1 -Locale \"${var.locale}\" -TimeZone \"${var.timezone}\" ${source.type == "virtualbox-iso" ? "-Hypervisor virtualbox" : "-Hypervisor vmware"}",
+      "& C:\\Windows\\Temp\\provision.ps1 -Locale \"${var.locale}\" -TimeZone \"${var.timezone}\" ${source.type == "virtualbox-iso" ? "-Hypervisor virtualbox" : "-Hypervisor vmware"} ${var.theme == "dark" ? "-UseDarkTheme" : ""}",
       "if ($LASTEXITCODE -ne 0) { throw 'provision.ps1 failed with exit code ' + $LASTEXITCODE }",
       "& C:\\Windows\\Temp\\debloat.ps1",
       "if ($LASTEXITCODE -ne 0) { throw 'debloat.ps1 failed with exit code ' + $LASTEXITCODE }"
