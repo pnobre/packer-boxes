@@ -427,16 +427,16 @@ try{
     Get-ChildItem -Path $env:APPDATA\"Microsoft\teams\Indexeddb" | Remove-Item -Confirm:$false
     Get-ChildItem -Path $env:APPDATA\"Microsoft\teams\Local Storage" | Remove-Item -Confirm:$false
     Get-ChildItem -Path $env:APPDATA\"Microsoft\teams\tmp" | Remove-Item -Confirm:$false
-    Write-Host "Teams Disk Cache Cleaned" -ForegroundColor Green
+    Write-Log "Teams Disk Cache Cleaned" -ForegroundColor Green
 }catch{
-    Write-Host $_ "ERROR"
+    Write-Log $_ "ERROR"
 }
 
 Write-Log "Stopping IE Process" -ForegroundColor Yellow
 try{
     Get-Process -ProcessName MicrosoftEdge | Stop-Process -Force
     Get-Process -ProcessName IExplore | Stop-Process -Force
-    Write-Host "Internet Explorer and Edge Processes Sucessfully Stopped" -ForegroundColor Green
+    Write-Log "Internet Explorer and Edge Processes Sucessfully Stopped" -ForegroundColor Green
 }catch{
     Write-Log $_ "ERROR"
 }
