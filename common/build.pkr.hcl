@@ -24,18 +24,47 @@ build {
   }
 
   provisioner "powershell" {
+    elevated_user     = local.elevated_user
+    elevated_password = local.elevated_pass
     inline = [
-      "C:\\Windows\\Temp\\provision.ps1 ${var.theme == "Dark" ? "-UseDarkTheme" : ""} -Locale \"${var.locale}\" -TimeZone \"${var.timezone}\"",
-      "C:\\Windows\\Temp\\debloat.ps1",
+      "Set-ExecutionPolicy Bypass -Scope Process -Force",
+      "C:\\Windows\\Temp\\provision.ps1 -Locale \"${var.locale}\" -TimeZone \"${var.timezone}\" ${var.theme == "Dark" ? "-UseDarkTheme" : ""} ${source.type == "virtualbox-iso" ? "-Hypervisor virtualbox" : "-Hypervisor vmware"}",
+      "C:\\Windows\\Temp\\debloat.ps1"
+    ]
+  }
+
+  provisioner "windows-restart" {
+    restart_timeout = "30m"
+  }
+
+  provisioner "windows-update" {
+    search_criteria = "IsInstalled=0 and IsHidden = 0"
+    filters = [
+      "exclude:$_.Title -like '*Preview*'",
+      "exclude:$_.Title -like '*Cumulative Update for Microsoft server*'",
+      "exclude:$_.Title -like '*Cumulative Update for Windows *'",
+      "exclude:$_.Title -like '*-* Security Update*'", # New naming scheme for cumulative updates
+      "exclude:$_.InstallationBehavior.CanRequestUserInput",
+      "include:$true",
+    ]
+  }
+
+  provisioner "windows-restart" {
+    restart_timeout = "30m"
+  }
+
+  provisioner "powershell" {
+    elevated_user     = local.elevated_user
+    elevated_password = local.elevated_pass
+    inline = [
       "C:\\Windows\\Temp\\cleanup.ps1"
     ]
   }
 
   post-processor "vagrant" {
     keep_input_artifact  = false
-    output               = "../build/${var.vm_name}/{{.Provider}}/${var.vm_name}-{{.Provider}}.box"
+    compression_level    = 9
+    output               = "../boxes/${var.vm_name}/{{.Provider}}/${var.vm_name}-{{.Provider}}.box"
     vagrantfile_template = "../vagrant/Vagrantfile.windows-template"
   }
-
-  post-processor "compress" {}
 }

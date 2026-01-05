@@ -16,11 +16,13 @@ source "virtualbox-iso" "windows" {
   boot_command         = local.boot_command
   boot_wait            = local.boot_wait
   cpus                 = var.cpus
+  nested_virt          = "true"
   memory               = var.memory
   disk_size            = var.disk_size
   firmware             = "efi"
   gfx_controller       = "vboxsvga"
   gfx_vram_size        = 128
+  gfx_accelerate_3d    = true
   hard_drive_interface = "sata"
   iso_interface        = "sata"
   guest_additions_mode = "upload"

@@ -66,12 +66,12 @@ variable "theme" {
 
 variable "ssh_username" {
   type    = string
-  default = "Administrator"
+  default = "vagrant"
 }
 
 variable "ssh_password" {
   type    = string
-  default = "P@ssword1"
+  default = "vagrant"
 }
 
 variable "ssh_timeout" {
@@ -97,6 +97,10 @@ packer {
     virtualbox = {
       version = "~> 1"
       source  = "github.com/hashicorp/virtualbox"
+    }
+    windows-update = {
+      version = ">= 0.14.1"
+      source  = "github.com/rgl/windows-update"
     }
   }
 }

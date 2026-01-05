@@ -170,43 +170,33 @@ let buildOne osName provider buildParallel =
     proc |> Proc.run |> ignore
     Trace.logfn "%s built successfully!" osName
 
-let package osName provider =
-    let provider' =
-        match provider with
-        | VirtualBox -> "virtualbox"
-        | VmWare -> "vmware"
+let addBoxToVagrant osName provider' =
+    let boxFile = Path.Combine("boxes", osName, provider', sprintf "%s-%s.box" osName provider')
+    
+    if not (File.Exists boxFile) then
+        failwithf "Box file not found: %s. Build the box first." boxFile
+    
+    Trace.logfn "Adding %s box for %s to Vagrant..." osName provider'
+    
+    let args = [ "box"; "add"; "--force"; "--name"; osName; boxFile ]
+    
+    CreateProcess.fromRawCommand "vagrant" args
+    |> CreateProcess.ensureExitCode
+    |> Proc.run
+    |> ignore
+    
+    Trace.logfn "Box %s added to Vagrant successfully!" osName
 
-    let outputDir = Path.Combine("build", osName, provider')
-    if not (Directory.Exists outputDir) then
-        Directory.CreateDirectory outputDir |> ignore<DirectoryInfo>
-
-    let boxFile = Path.Combine("build", osName, provider', sprintf "%s-%s.box" osName provider')
-
-    Trace.tracefn "Packaging %s for %s into %s..." outputDir provider' boxFile
-
-    let metadata =
-        sprintf
-            """{
-            "provider": "%s",
-            "version": "1.0.0"
-        }"""
-            provider'
-
-    File.WriteAllText(Path.Combine(outputDir, "metadata.json"), metadata)
-
-    if File.Exists "vagrant/Vagrantfile.windows-template" then
-        File.Copy("vagrant/Vagrantfile.windows-template", Path.Combine(outputDir, "Vagrantfile"), true)
-
-    let args = [ "czvf"; boxFile; "-C"; outputDir; "." ]
-    CreateProcess.fromRawCommand "tar" args |> Proc.run |> ignore
-
-    Trace.tracefn "Vagrant box created: %s" boxFile
-
-let packageOne osName =
-  provider
-  |> Option.map List.singleton
-  |> Option.defaultValue [ VmWare; VirtualBox ]
-  |> List.iter (package osName)
+let deployBoxOne osName =
+    provider
+    |> Option.map List.singleton
+    |> Option.defaultValue [ VmWare; VirtualBox ]
+    |> List.iter (fun p ->
+        let provider' =
+            match p with
+            | VirtualBox -> "virtualbox"
+            | VmWare -> "vmware"
+        addBoxToVagrant osName provider')
 
 // Validation target
 Target.create "validate" (fun _ ->
@@ -214,20 +204,20 @@ Target.create "validate" (fun _ ->
     Trace.log "Packer validated.")
 
 // ISO Download targets
-Target.create "download-iso-win10" (fun _ -> downloadIso (getIsoInfo "windows-10"))
-Target.create "download-iso-win11" (fun _ -> downloadIso (getIsoInfo "windows-11"))
-Target.create "download-iso-server2025" (fun _ -> downloadIso (getIsoInfo "windows-server-2025"))
+Target.create "download-iso-windows-10" (fun _ -> downloadIso (getIsoInfo "windows-10"))
+Target.create "download-iso-windows-11" (fun _ -> downloadIso (getIsoInfo "windows-11"))
+Target.create "download-iso-windows-server-2025" (fun _ -> downloadIso (getIsoInfo "windows-server-2025"))
 Target.create "download-all-isos" ignore
 
 // Build targets in parallel, unless a specific provider is given
-Target.create "build-win10" (fun _ -> buildOne "windows-10" provider provider.IsNone)
-Target.create "build-win11" (fun _ -> buildOne "windows-11" provider provider.IsNone)
-Target.create "build-server2025" (fun _ -> buildOne "windows-server-2025" provider provider.IsNone)
+Target.create "build-windows-10" (fun _ -> buildOne "windows-10" provider provider.IsNone)
+Target.create "build-windows-11" (fun _ -> buildOne "windows-11" provider provider.IsNone)
+Target.create "build-windows-server-2025" (fun _ -> buildOne "windows-server-2025" provider provider.IsNone)
 
-// Package targets
-Target.create "package-win10" (fun _ -> packageOne "windows-10")
-Target.create "package-win11" (fun _ -> packageOne "windows-11")
-Target.create "package-server2025" (fun _ -> packageOne "windows-server-2025")
+// Deploy box targets
+Target.create "deploy-windows-10" (fun _ -> deployBoxOne "windows-10")
+Target.create "deploy-windows-11" (fun _ -> deployBoxOne "windows-11")
+Target.create "deploy-windows-server-2025" (fun _ -> deployBoxOne "windows-server-2025")
 
 // Build all target
 Target.create "all" (fun _ ->
@@ -237,28 +227,31 @@ Target.create "all" (fun _ ->
 Target.create "default" ignore
 
 // Dependencies: ISO downloads
-"download-iso-win10" ==> "download-all-isos"
-"download-iso-win11" ==> "download-all-isos"
-"download-iso-server2025" ==> "download-all-isos"
+"download-iso-windows-10" ==> "download-all-isos"
+"download-iso-windows-11" ==> "download-all-isos"
+"download-iso-windows-server-2025" ==> "download-all-isos"
 
 // Dependencies: validate before build
-"validate" ==> "build-win10"
-"validate" ==> "build-win11"
-"validate" ==> "build-server2025"
+"validate" ==> "build-windows-10"
+"validate" ==> "build-windows-11"
+"validate" ==> "build-windows-server-2025"
 
 // Dependencies: download ISO before build
-"download-iso-win10" ==> "build-win10"
-"download-iso-win11" ==> "build-win11"
-"download-iso-server2025" ==> "build-server2025"
+"download-iso-windows-10" ==> "build-windows-10"
+"download-iso-windows-11" ==> "build-windows-11"
+"download-iso-windows-server-2025" ==> "build-windows-server-2025"
 
-// Dependencies: build before package
-"build-win10" ==> "package-win10"
-"build-win11" ==> "package-win11"
+// Dependencies: build before add-box
+"build-windows-10" ==> "deploy-windows-10"
+"build-windows-11" ==> "deploy-windows-11"
+"build-windows-server-2025" ==> "deploy-windows-server-2025"
+
 // Clean target
 Target.create "clean" (fun _ ->
   Trace.log "Cleaning temporary build files..."
   
   !! "build/**"
+  ++ "boxes/**"
   ++ "**/packer_*-iso" // TODO: Fake doesn't pick these up. Fix them
   ++ "**/packer_*-iso"
   ++ "**/packer_cache/**"
@@ -276,10 +269,6 @@ Target.create "full-clean" (fun _ ->
   Trace.log "ISO cleanup complete.")
 
 "clean" ==> "full-clean"
-
-"build-win10" ==> "package-win10"
-"build-win11" ==> "package-win11"
-"build-server2025" ==> "package-server2025"
 
 let target =
     match Environment.GetCommandLineArgs() |> Array.tryItem 2 with
