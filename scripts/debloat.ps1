@@ -270,7 +270,7 @@ function Takeown-Registry($key) {
         }
     }
 
-    # get administraor group
+    # get administrator group
     $admins = New-Object System.Security.Principal.SecurityIdentifier("S-1-5-32-544")
     $admins = $admins.Translate([System.Security.Principal.NTAccount])
 
@@ -427,7 +427,7 @@ try{
     Get-ChildItem -Path $env:APPDATA\"Microsoft\teams\Indexeddb" | Remove-Item -Confirm:$false
     Get-ChildItem -Path $env:APPDATA\"Microsoft\teams\Local Storage" | Remove-Item -Confirm:$false
     Get-ChildItem -Path $env:APPDATA\"Microsoft\teams\tmp" | Remove-Item -Confirm:$false
-    Write-Log "Teams Disk Cache Cleaned" -Level "SUCCESS"
+    Write-Log "Teams Disk Cache Cleaned" -Level "INFO"
 }catch{
     Write-Log $_ -Level "ERROR"
 }
@@ -436,7 +436,7 @@ Write-Log "Stopping IE Process"
 try{
     Get-Process -ProcessName MicrosoftEdge | Stop-Process -Force
     Get-Process -ProcessName IExplore | Stop-Process -Force
-    Write-Log "Internet Explorer and Edge Processes Successfully Stopped" -Level "SUCCESS"
+    Write-Log "Internet Explorer and Edge Processes Successfully Stopped" -Level "INFO"
 }catch{
     Write-Log $_ -Level "ERROR"
 }
