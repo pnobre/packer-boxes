@@ -192,7 +192,7 @@ elseif ($Hypervisor -eq "vmware") {
   Write-Log "Installing VMware Tools" ## TODO: Implement VMware Tools installation
 }
 
-Write-Log "Installing usefull applications via Chocolatey"
+Write-Log "Installing useful applications via Chocolatey"
 ("powershell-core", 
 "dotnet-8.0-sdk", 
 "wireshark",
