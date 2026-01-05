@@ -156,7 +156,7 @@ Add-Type -A System.IO.Compression.FileSystem
 if ($Hypervisor -eq "virtualbox") {
   Write-Log "Installing VirtualBox Guest Additions"
   $guestAdditionsIsoPath = "$env:USERPROFILE\VBoxGuestAdditions.iso"
-  $installed = $false 
+  $installed = $false
   if (Test-Path $guestAdditionsIsoPath) {
     Write-Log "Found Guest Additions at $guestAdditionsIsoPath. Mounting as drive..."
     $mountResult = Mount-DiskImage -ImagePath $guestAdditionsIsoPath -PassThru
