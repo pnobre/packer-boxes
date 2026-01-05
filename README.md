@@ -85,9 +85,9 @@ dotnet fake build -t <target-name>
 #### ISO Download Targets
 Download Windows ISO files with checksum verification:
 
-- **`download-iso-win10`** - Downloads Windows 10 ISO
-- **`download-iso-win11`** - Downloads Windows 11 ISO
-- **`download-iso-server2025`** - Downloads Windows Server 2025 ISO
+- **`download-iso-windows-10`** - Downloads Windows 10 ISO
+- **`download-iso-windows-11`** - Downloads Windows 11 ISO
+- **`download-iso-windows-server-2025`** - Downloads Windows Server 2025 ISO
 - **`download-all-isos`** - Downloads all ISO files
 
 ISOs are automatically downloaded as dependencies before building, but you can download them manually:
@@ -97,40 +97,47 @@ dotnet fake build -t download-all-isos
 ```
 
 #### Build Targets
-Create VM images (automatically downloads ISOs if needed):
+Create VM images and Vagrant boxes (automatically downloads ISOs if needed):
 
-- **`build-win10`** - Build Windows 10 box
-- **`build-win11`** - Build Windows 11 box
-- **`build-server2025`** - Build Windows Server 2025 box
+- **`build-windows-10`** - Build Windows 10 box
+- **`build-windows-11`** - Build Windows 11 box
+- **`build-windows-server-2025`** - Build Windows Server 2025 box
+- **`all`** - Build all boxes
 
 Build a single OS:
 ```powershell
-dotnet fake build -t build-win11
+dotnet fake build -t build-windows-11
 ```
 
-#### Package Targets
-Create Vagrant boxes from built images:
-
-- **`package-win10`** - Package Windows 10 box
-- **`package-win11`** - Package Windows 11 box
-- **`package-server2025`** - Package Windows Server 2025 box
-
-Package a single OS:
-```powershell
-dotnet fake build -t package-win11
-```
-
-#### Full Build Targets
-Build and package in one step:
-
-```powershell
-dotnet fake build -t build-win11
-dotnet fake build -t package-win11
-```
-
-Or build everything:
+Build everything:
 ```powershell
 dotnet fake build -t all
+```
+
+#### Add Box Targets
+Add built boxes to your local Vagrant installation:
+
+- **`deploy-windows-10`** - Add Windows 10 box to Vagrant
+- **`deploy-windows-11`** - Add Windows 11 box to Vagrant
+- **`deploy-windows-server-2025`** - Add Windows Server 2025 box to Vagrant
+
+Add a box to Vagrant:
+```powershell
+dotnet fake build -t deploy-windows-11
+```
+
+Note: The box will be added with the name matching the OS (e.g., `windows-11`). The `--force` flag is used, so it will overwrite any existing box with the same name.
+
+#### Clean Targets
+Remove build artifacts:
+
+- **`clean`** - Remove build and boxes directories
+- **`full-clean`** - Remove build artifacts and downloaded ISOs
+
+```powershell
+dotnet fake build -t clean
+# OR to also delete downloaded ISOs:
+dotnet fake build -t full-clean
 ```
 
 ### Build Options
@@ -139,15 +146,15 @@ Customize builds with optional parameters:
 
 ```powershell
 # Build only for a specific hypervisor
-dotnet fake build -t build-win11 -- --provider=virtualbox
+dotnet fake build -t build-windows-11 -- --provider=virtualbox
 # OR
-dotnet fake build -t build-win11 -- --provider=vmware
+dotnet fake build -t build-windows-11 -- --provider=vmware
 
 # Customize Windows settings
-dotnet fake build -t build-win11 -- --theme=Dark --locale=en-US --timezone="Eastern Standard Time"
+dotnet fake build -t build-windows-11 -- --theme=Dark --locale=en-US --timezone="Eastern Standard Time"
 
 # Combine options
-dotnet fake build -t build-win11 -- --provider=virtualbox --theme=Dark --locale=en-GB --timezone="GMT Standard Time"
+dotnet fake build -t build-windows-11 -- --provider=virtualbox --theme=Dark --locale=en-GB --timezone="GMT Standard Time"
 ```
 
 #### Available Options
@@ -167,8 +174,8 @@ dotnet fake build -t build-win11 -- --provider=virtualbox --theme=Dark --locale=
 If your system has limited resources, build for one provider at a time:
 
 ```powershell
-dotnet fake build -t build-win11 -- --provider=virtualbox
-dotnet fake build -t build-win11 -- --provider=vmware
+dotnet fake build -t build-windows-11 -- --provider=virtualbox
+dotnet fake build -t build-windows-11 -- --provider=vmware
 ```
 
 ## Project Structure
@@ -193,8 +200,15 @@ dotnet fake build -t build-win11 -- --provider=vmware
 │   ├── cleanup.ps1
 │   └── utilities.ps1
 ├── iso/                               # Downloaded ISO files
-└── build/                             # Output VM images and boxes
+├── build/                             # Temporary VM build artifacts
+└── boxes/                             # Final Vagrant box files
 ```
+
+## Output
+
+After building, you'll find:
+- **VM artifacts** in `build/<os-name>/<provider>/`
+- **Vagrant boxes** in `boxes/<os-name>/<provider>/<os-name>-<provider>.box`
 
 ## Notes
 
@@ -202,3 +216,4 @@ dotnet fake build -t build-win11 -- --provider=vmware
 - The `autounattend.xml` is templated and reused across all Windows versions
 - ISOs are cached in the `iso/` directory to avoid re-downloading
 - Vagrant boxes are created with the template from `vagrant/Vagrantfile.windows-template`
+- The build process automatically packages the VMs into Vagrant boxes
