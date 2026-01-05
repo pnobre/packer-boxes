@@ -259,6 +259,7 @@ Target.create "clean" (fun _ ->
   Trace.log "Cleaning temporary build files..."
   
   !! "build/**"
+  ++ "boxes/**"
   ++ "**/packer_*-iso" // TODO: Fake doesn't pick these up. Fix them
   ++ "**/packer_*-iso"
   ++ "**/packer_cache/**"

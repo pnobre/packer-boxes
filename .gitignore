@@ -3,6 +3,7 @@
 **/*.box
 **/output*/**
 build/**
+boxes/**
 test/**
 iso/*
 .fake

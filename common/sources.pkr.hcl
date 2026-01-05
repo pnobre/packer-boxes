@@ -9,6 +9,8 @@ locals {
   cd_content = {
     "autounattend.xml" = templatefile("${path.root}/autounattend.xml", { local = { image_name = var.image_name } })
   }
+  elevated_user    = var.ssh_username
+  elevated_pass    = var.ssh_password 
 }
 
 

@@ -16,3 +16,6 @@ Write-Log "Starting cleanup script"
     $global:error.RemoveAt(0) 
   }
 }
+
+# Write-Log "Optimizing Disk"
+# Optimize-Volume -DriveLetter C -Analyze -Defrag
