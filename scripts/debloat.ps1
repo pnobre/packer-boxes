@@ -412,7 +412,7 @@ Write-Log "Stopping Teams Process"
 try{
     Get-Process -ProcessName Teams | Stop-Process -Force
     Start-Sleep -Seconds 3
-    Write-Log "Teams Process Successfully Stopped" -Level "SUCCESS"
+    Write-Log "Teams Process Successfully Stopped" -Level "INFO"
 }catch{
     Write-Log $_ -Level "ERROR"
 }
