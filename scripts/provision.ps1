@@ -169,7 +169,9 @@ if ($Hypervisor -eq "virtualbox") {
     foreach ($volume in $volumes) {
       $driveLetter = $volume.DriveLetter
       $guestAdditionsPath = "$($driveLetter):\VBoxWindowsAdditions.exe"
-      break;
+      if (Test-Path $guestAdditionsPath) {
+        break;
+      }
     }
   }
   if (Test-Path $guestAdditionsPath) {
