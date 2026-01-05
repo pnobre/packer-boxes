@@ -28,7 +28,7 @@ build {
     elevated_password = local.elevated_pass
     inline = [
       "Set-ExecutionPolicy Bypass -Scope Process -Force",
-      "C:\\Windows\\Temp\\provision.ps1 -Locale \"${var.locale}\" -TimeZone \"${var.timezone}\" ${source.type == "virtualbox-iso" ? "-Hypervisor virtualbox" : "-Hypervisor vmware"}",
+      "C:\\Windows\\Temp\\provision.ps1 -Locale \"${var.locale}\" -TimeZone \"${var.timezone}\" ${var.theme == "Dark" ? "-UseDarkTheme" : ""} ${source.type == "virtualbox-iso" ? "-Hypervisor virtualbox" : "-Hypervisor vmware"}",
       "C:\\Windows\\Temp\\debloat.ps1"
     ]
   }
