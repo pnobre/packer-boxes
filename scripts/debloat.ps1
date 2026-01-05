@@ -412,7 +412,7 @@ Write-Log "Stopping Teams Process" -ForegroundColor Yellow
 try{
     Get-Process -ProcessName Teams | Stop-Process -Force
     Start-Sleep -Seconds 3
-    Write-Log "Teams Process Sucessfully Stopped" -ForegroundColor Green
+    Write-Log "Teams Process Successfully Stopped" -ForegroundColor Green
 }catch{
     Write-Log $_ "ERROR"
 }
@@ -436,7 +436,7 @@ Write-Log "Stopping IE Process" -ForegroundColor Yellow
 try{
     Get-Process -ProcessName MicrosoftEdge | Stop-Process -Force
     Get-Process -ProcessName IExplore | Stop-Process -Force
-    Write-Log "Internet Explorer and Edge Processes Sucessfully Stopped" -ForegroundColor Green
+    Write-Log "Internet Explorer and Edge Processes Successfully Stopped" -ForegroundColor Green
 }catch{
     Write-Log $_ "ERROR"
 }
