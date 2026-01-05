@@ -408,16 +408,16 @@ Write-Log "Removing Teams"
 # Clearing Teams Cache by Mark Vale
 # Uninstall Teams by Rudy Mens
 
-Write-Log "Stopping Teams Process" -ForegroundColor Yellow
+Write-Log "Stopping Teams Process"
 try{
     Get-Process -ProcessName Teams | Stop-Process -Force
     Start-Sleep -Seconds 3
-    Write-Log "Teams Process Sucessfully Stopped" -ForegroundColor Green
+    Write-Log "Teams Process Successfully Stopped" -Level "SUCCESS"
 }catch{
-    Write-Log $_ "ERROR"
+    Write-Log $_ -Level "ERROR"
 }
 
-Write-Log "Clearing Teams Disk Cache" -ForegroundColor Yellow
+Write-Log "Clearing Teams Disk Cache"
 try{
     Get-ChildItem -Path $env:APPDATA\"Microsoft\teams\application cache\cache" | Remove-Item -Confirm:$false
     Get-ChildItem -Path $env:APPDATA\"Microsoft\teams\blob_storage" | Remove-Item -Confirm:$false
@@ -427,27 +427,27 @@ try{
     Get-ChildItem -Path $env:APPDATA\"Microsoft\teams\Indexeddb" | Remove-Item -Confirm:$false
     Get-ChildItem -Path $env:APPDATA\"Microsoft\teams\Local Storage" | Remove-Item -Confirm:$false
     Get-ChildItem -Path $env:APPDATA\"Microsoft\teams\tmp" | Remove-Item -Confirm:$false
-    Write-Log "Teams Disk Cache Cleaned" -ForegroundColor Green
+    Write-Log "Teams Disk Cache Cleaned" -Level "INFO"
 }catch{
-    Write-Log $_ "ERROR"
+    Write-Log $_ -Level "ERROR"
 }
 
-Write-Log "Stopping IE Process" -ForegroundColor Yellow
+Write-Log "Stopping IE Process"
 try{
     Get-Process -ProcessName MicrosoftEdge | Stop-Process -Force
     Get-Process -ProcessName IExplore | Stop-Process -Force
-    Write-Log "Internet Explorer and Edge Processes Sucessfully Stopped" -ForegroundColor Green
+    Write-Log "Internet Explorer and Edge Processes Successfully Stopped" -Level "INFO"
 }catch{
-    Write-Log $_ "ERROR"
+    Write-Log $_ -Level "ERROR"
 }
 
-Write-Log "Clearing IE Cache" -ForegroundColor Yellow
+Write-Log "Clearing IE Cache"
 try{
     RunDll32.exe InetCpl.cpl, ClearMyTracksByProcess 8
     RunDll32.exe InetCpl.cpl, ClearMyTracksByProcess 2
-    Write-Log "IE and Edge Cleaned" -ForegroundColor Green
+    Write-Log "IE and Edge Cleaned" -Level "SUCCESS"
 }catch{
-    Write-Log $_ "ERROR"
+    Write-Log $_ -Level "ERROR"
 }
 Write-Log "Cleanup Complete..."
 
