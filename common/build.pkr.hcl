@@ -27,9 +27,12 @@ build {
     elevated_user     = local.elevated_user
     elevated_password = local.elevated_pass
     inline = [
+      "$ErrorActionPreference = 'Stop'",
       "Set-ExecutionPolicy Bypass -Scope Process -Force",
-      "C:\\Windows\\Temp\\provision.ps1 -Locale \"${var.locale}\" -TimeZone \"${var.timezone}\" ${var.theme == "Dark" ? "-UseDarkTheme" : ""} ${source.type == "virtualbox-iso" ? "-Hypervisor virtualbox" : "-Hypervisor vmware"}",
-      "C:\\Windows\\Temp\\debloat.ps1"
+      "& C:\\Windows\\Temp\\provision.ps1 -Locale \"${var.locale}\" -TimeZone \"${var.timezone}\" ${source.type == "virtualbox-iso" ? "-Hypervisor virtualbox" : "-Hypervisor vmware"} ${var.theme == "dark" ? "-UseDarkTheme" : ""}",
+      "if ($LASTEXITCODE -ne 0) { throw 'provision.ps1 failed with exit code ' + $LASTEXITCODE }",
+      "& C:\\Windows\\Temp\\debloat.ps1",
+      "if ($LASTEXITCODE -ne 0) { throw 'debloat.ps1 failed with exit code ' + $LASTEXITCODE }"
     ]
   }
 
@@ -57,7 +60,9 @@ build {
     elevated_user     = local.elevated_user
     elevated_password = local.elevated_pass
     inline = [
-      "C:\\Windows\\Temp\\cleanup.ps1"
+      "$ErrorActionPreference = 'Stop'",
+      "& C:\\Windows\\Temp\\cleanup.ps1",
+      "if ($LASTEXITCODE -ne 0) { throw 'cleanup.ps1 failed with exit code ' + $LASTEXITCODE }"
     ]
   }
 

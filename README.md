@@ -2,6 +2,24 @@
 
 Build automated Vagrant boxes for Windows 10, Windows 11, and Windows Server 2025 using Packer.
 
+## ⚠️ Security Notice - Local Use Only
+
+**These Vagrant boxes are designed for local development and testing purposes only.**
+
+For performance and usability in development environments, these boxes include several optimizations that make them **unsuitable for production use**:
+
+- **Windows Defender is disabled** - Real-time protection and antivirus scanning are turned off to improve performance during development
+- **Security features are relaxed** - Various security settings are modified for easier local testing
+- **No hardening applied** - These images are not hardened against security threats
+
+**These boxes should only be used in trusted, isolated local environments. Do not deploy them to production, share them publicly, or use them in any security-sensitive context.**
+
+For production use cases, you should:
+- Re-enable Windows Defender and all security features
+- Apply appropriate security hardening
+- Follow your organization's security policies and compliance requirements
+- Consider using official, hardened Windows images from Microsoft or other trusted sources
+
 ## Prerequisites
 
 ### Install Required Tools
