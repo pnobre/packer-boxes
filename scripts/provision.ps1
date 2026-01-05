@@ -14,7 +14,7 @@ param(
 )
 
 . "$PSScriptRoot/utilities.ps1"
-write-Log "Starting provisioning script"
+Write-Log "Starting provisioning script"
 
 $lightTheme = If ($UseDarkTheme) { "0" } else { "1" }
 if ($UseDarkTheme) { 
@@ -50,10 +50,10 @@ New-NetFirewallRule -DisplayName "Packer - Allow Remote Desktop" -Direction Inbo
 Write-Log "Removing Search from Taskbar"
 Set-RegistryKey -Path 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Search' -Name SearchBoxTaskbarMode -Value 0 -Type DWord
 
-write-Log "Disabling Widgets on Taskbar"
+Write-Log "Disabling Widgets on Taskbar"
 Set-RegistryKey -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Dsh' -Name AllowNewsAndInterests -Value 0 -Type DWord
 
-write-Log 'Disabling Windows Defender'
+Write-Log 'Disabling Windows Defender'
 if (Get-Command -ErrorAction SilentlyContinue Uninstall-WindowsFeature) {
     # for Windows Server.
     Get-WindowsFeature 'Windows-Defender*' | Uninstall-WindowsFeature
@@ -89,21 +89,21 @@ Write-Log "Applying some UI Tweaks"
 # Dont use visual styles on windows and buttons
 {Set-RegistryKey -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\ThemeManager' -Name ThemeActive -Type DWORD -Value 1}
 # Dont use common tasks in folders
-{Set-RegistryKey  -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced' -Name WebView -Type DWORD -Value 0}
+Set-RegistryKey  -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced' -Name WebView -Type DWORD -Value 0
 # Dont use drop shadows for icon labels on the desktop
-{Set-RegistryKey -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced' -Name ListviewShadow -Type DWORD -Value 0}
+Set-RegistryKey -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced' -Name ListviewShadow -Type DWORD -Value 0
 # Dont use a background image for each folder type
-{Set-RegistryKey -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced' -Name ListviewWatermark -Type DWORD -Value 0}
+Set-RegistryKey -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced' -Name ListviewWatermark -Type DWORD -Value 0
 # Dont slide taskbar buttons
-{Set-RegistryKey -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced' -Name TaskbarAnimations -Type DWORD -Value 0}
+Set-RegistryKey -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced' -Name TaskbarAnimations -Type DWORD -Value 0
 # Dont animate windows when minimizing and maximizing
-{Set-RegistryKey -Path 'HKCU:\Control Panel\Desktop\WindowMetrics' -Name MinAnimate -Type STRING -Value 0}
+Set-RegistryKey -Path 'HKCU:\Control Panel\Desktop\WindowMetrics' -Name MinAnimate -Type STRING -Value 0
 # Dont show window contents while dragging
-{Set-RegistryKey -Path 'HKCU:\Control Panel\Desktop' -Name DragFullWindows -Type STRING -Value 0}
+Set-RegistryKey -Path 'HKCU:\Control Panel\Desktop' -Name DragFullWindows -Type STRING -Value 0
 # Dont Smooth edges of screen fonts
-{Set-RegistryKey -Path 'HKCU:\Control Panel\Desktop' -Name FontSmoothing -Type STRING -Value 0}
+Set-RegistryKey -Path 'HKCU:\Control Panel\Desktop' -Name FontSmoothing -Type STRING -Value 0
 # Dont show shadows under menus
-{Set-RegistryKey -Path 'HKCU:\Control Panel\Desktop' -Name UserPreferencesMask -Type BINARY -Value (90,12,01,80)}
+Set-RegistryKey -Path 'HKCU:\Control Panel\Desktop' -Name UserPreferencesMask -Type BINARY -Value (90,12,01,80)
 
 Write-Log 'Setting the vagrant account properties...'
 # see the ADS_USER_FLAG_ENUM enumeration at https://msdn.microsoft.com/en-us/library/aa772300(v=vs.85).aspx
@@ -156,7 +156,7 @@ Add-Type -A System.IO.Compression.FileSystem
 if ($Hypervisor -eq "virtualbox") {
   Write-Log "Installing VirtualBox Guest Additions"
   $guestAdditionsIsoPath = "$env:USERPROFILE\VBoxGuestAdditions.iso"
-  $installed = $false 
+  $installed = $false
   if (Test-Path $guestAdditionsIsoPath) {
     Write-Log "Found Guest Additions at $guestAdditionsIsoPath. Mounting as drive..."
     $mountResult = Mount-DiskImage -ImagePath $guestAdditionsIsoPath -PassThru
@@ -169,7 +169,9 @@ if ($Hypervisor -eq "virtualbox") {
     foreach ($volume in $volumes) {
       $driveLetter = $volume.DriveLetter
       $guestAdditionsPath = "$($driveLetter):\VBoxWindowsAdditions.exe"
-      break;
+      if (Test-Path $guestAdditionsPath) {
+        break;
+      }
     }
   }
   if (Test-Path $guestAdditionsPath) {
