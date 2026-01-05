@@ -14,7 +14,7 @@ param(
 )
 
 . "$PSScriptRoot/utilities.ps1"
-write-Log "Starting provisioning script"
+Write-Log "Starting provisioning script"
 
 $lightTheme = If ($UseDarkTheme) { "0" } else { "1" }
 if ($UseDarkTheme) { 
@@ -50,10 +50,10 @@ New-NetFirewallRule -DisplayName "Packer - Allow Remote Desktop" -Direction Inbo
 Write-Log "Removing Search from Taskbar"
 Set-RegistryKey -Path 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Search' -Name SearchBoxTaskbarMode -Value 0 -Type DWord
 
-write-Log "Disabling Widgets on Taskbar"
+Write-Log "Disabling Widgets on Taskbar"
 Set-RegistryKey -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Dsh' -Name AllowNewsAndInterests -Value 0 -Type DWord
 
-write-Log 'Disabling Windows Defender'
+Write-Log 'Disabling Windows Defender'
 if (Get-Command -ErrorAction SilentlyContinue Uninstall-WindowsFeature) {
     # for Windows Server.
     Get-WindowsFeature 'Windows-Defender*' | Uninstall-WindowsFeature
