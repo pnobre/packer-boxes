@@ -62,7 +62,7 @@ build {
   }
 
   post-processor "vagrant" {
-    keep_input_artifact  = false 
+    keep_input_artifact  = false
     compression_level    = 9
     output               = "../boxes/${var.vm_name}/{{.Provider}}/${var.vm_name}-{{.Provider}}.box"
     vagrantfile_template = "../vagrant/Vagrantfile.windows-template"
