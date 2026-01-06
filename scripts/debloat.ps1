@@ -2,7 +2,8 @@
 
 Write-Log "Starting debloat script"
 
-# Debloat windows, copied from https://github.com/memstechtips/UnattendedWinstall 
+# Debloat windows, parts from https://github.com/memstechtips/UnattendedWinstall 
+# and https://github.com/chef/bento/blob/main/packer_templates/scripts/windows/remove-apps.ps1
 
 Write-Log "Setting up AppX compatibility aliases for this session..."
 try {
@@ -34,22 +35,31 @@ $packages = @(
     'microsoft.windowscommunicationsapps'
     'Microsoft.SkypeApp'
     'MSTeams'
+    'MicrosoftTeams'
     'Microsoft.WindowsFeedbackHub'
     'Microsoft.WindowsMaps'
     'Microsoft.MicrosoftOfficeHub'
     'Microsoft.OutlookForWindows'
+    'Microsoft.ScreenSketch'
+    'Microsoft.Services.Store.Engagement'
+    'Microsoft.StorePurchaseApp'
+    'Microsoft.WindowsCalculator'
+    'Microsoft.OneDriveSync'
     'Microsoft.MSPaint'
+    'Microsoft.Paint'
     'Microsoft.Windows.Photos'
     'Microsoft.People'
     'Microsoft.PowerAutomateDesktop'
     'MicrosoftCorporationII.QuickAssist'
     'Microsoft.MicrosoftSolitaireCollection'
+    'MicrosoftWindows.Client.WebExperience'
     'Microsoft.GamingApp'
     'Microsoft.XboxApp'
     'Microsoft.XboxIdentityProvider'
     'Microsoft.XboxGameOverlay'
     'Microsoft.Xbox.TCUI'
     'Microsoft.XboxGamingOverlay'
+    'Microsoft.XboxSpeechToTextOverlay'
     'Microsoft.WindowsStore'
     'Microsoft.ZuneMusic'
     'Microsoft.ZuneVideo'
@@ -58,6 +68,7 @@ $packages = @(
     'Microsoft.Getstarted'
     'Microsoft.Todos'
     'Microsoft.YourPhone'
+    'Microsoft.Wallet'
     'Microsoft.Copilot'
     'Microsoft.Windows.Ai.Copilot.Provider'
     'Microsoft.Copilot_8wekyb3d8bbwe'
@@ -66,17 +77,29 @@ $packages = @(
 
 $capabilities = @(
     'Microsoft.Windows.PowerShell.ISE'
-    'App.Support.QuickAssist'
-    'App.StepsRecorder'
     'Microsoft.Windows.WordPad'
+    'Print.Fax.Scan'
+    'Language.Handwriting'
+    'Browser.InternetExplorer'
+    'MathRecognizer'
+    'OneCoreUAP.OneSync'
+    'Microsoft.Windows.MSPaint'
+    'App.Support.QuickAssist'
+    'Microsoft.Windows.SnippingTool'
+    'Language.Speech'
+    'Language.TextToSpeech'
+    'App.StepsRecorder'
+    'Hello.Face.18967'
+    'Hello.Face.Migration.18967'
+    'Hello.Face.20134'
+    'Media.WindowsMediaPlayer'
 )
 
 $optionalFeatures = @(
+    'MediaPlayback'
+    'MicrosoftWindowsPowerShellV2Root'
     'Recall'
-)
-
-$specialApps = @(
-    'OneNote'
+    'Microsoft-SnippingTool'
 )
 
 $maxRetries = 3
