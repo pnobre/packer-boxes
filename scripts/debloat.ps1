@@ -40,7 +40,7 @@ $packages = @(
     'Microsoft.WindowsMaps'
     'Microsoft.MicrosoftOfficeHub'
     'Microsoft.OutlookForWindows'
-    'Microsoft.ScreenSketch'   
+    'Microsoft.ScreenSketch'
     'Microsoft.Services.Store.Engagement'
     'Microsoft.StorePurchaseApp'
     'Microsoft.WindowsCalculator'
