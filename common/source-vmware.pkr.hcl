@@ -27,5 +27,7 @@ source "vmware-iso" "windows" {
   disk_type_id       = 0
   disk_adapter_type  = "nvme"
   cdrom_adapter_type = "sata"
+  tools_upload_flavor = "windows"
+  tools_upload_path   = "C:\\Windows\\Temp\\VMwareTools.iso"
   output_directory   = "../build/${var.vm_name}/vmware"
 }

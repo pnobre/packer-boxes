@@ -191,7 +191,39 @@ if ($Hypervisor -eq "virtualbox") {
 }
 
 elseif ($Hypervisor -eq "vmware") {
-  Write-Log "Installing VMware Tools" ## TODO: Implement VMware Tools installation
+  Write-Log "Installing VMWare Tools"
+  $vmwareToolsIsoPath = "$env:WinDir\Temp\VMwareTools.iso"
+  $installed = $false
+  if (Test-Path $vmwareToolsIsoPath) {
+    Write-Log "Found VMWare Tools at $vmwareToolsIsoPath. Mounting as drive..."
+    $mountResult = Mount-DiskImage -ImagePath $vmwareToolsIsoPath -PassThru
+    $driveLetter = ($mountResult | Get-Volume).DriveLetter
+    $vmwareToolsPath = "$($driveLetter):\setup.exe"
+  }
+  else {
+    Write-Log "VMWare Tools ISO not found at $vmwareToolsPath. Searching removable drives..."
+    $volumes = Get-Volume | Where-Object { $_.DriveType -ne 'Fixed' -and $_.DriveLetter }
+    foreach ($volume in $volumes) {
+      $driveLetter = $volume.DriveLetter
+      $vmwareToolsPath = "$($driveLetter):\setup.exe"
+      if (Test-Path $vmwareToolsPath) {
+        break;
+      }
+    }
+  }
+  if (Test-Path $vmwareToolsPath) {
+    Write-Log "Found VMWare Tools at $vmwareToolsPath. Installing..."
+    $certs = "${driveLetter}:\cert"
+    Start-Process -FilePath $vmwareToolsPath -ArgumentList '/S /v "/qn REBOOT=R"' -Wait
+    $installed = $true
+  }
+  
+  if ($installed) {
+    Write-Log "VMWare Tools installed successfully."
+  }
+  else {
+    Write-Log "VMWare Tools not found on any removable drive." -Level "Error"
+  }
 }
 
 Write-Log "Installing useful applications via Chocolatey"
@@ -241,4 +273,11 @@ $appsToPin.GetEnumerator() | ForEach-Object {
   }
 }
 
-
+Write-Log "Set OpenSSH default shell to PowerShell Core"
+$pwshPath = (Get-Command "pwsh.exe").Path
+if (Test-Path $pwshPath) {
+  Set-RegistryKey -Path "HKLM:\SOFTWARE\OpenSSH" -Name DefaultShell -Value "C:\Program Files\PowerShell\7\pwsh.exe" -Type String
+}
+else {
+  Write-Log "Couldn't get Path for powershell core. Skipping" -Level "Error"
+}
