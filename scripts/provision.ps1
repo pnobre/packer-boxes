@@ -201,7 +201,7 @@ elseif ($Hypervisor -eq "vmware") {
     $vmwareToolsPath = "$($driveLetter):\setup.exe"
   }
   else {
-    Write-Log "VMWare Tools ISO not found at $vmwareToolsPath. Searching removable drives..."
+    Write-Log "VMWare Tools ISO not found at $vmwareToolsIsoPath. Searching removable drives..."
     $volumes = Get-Volume | Where-Object { $_.DriveType -ne 'Fixed' -and $_.DriveLetter }
     foreach ($volume in $volumes) {
       $driveLetter = $volume.DriveLetter
