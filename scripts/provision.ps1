@@ -275,7 +275,7 @@ $appsToPin.GetEnumerator() | ForEach-Object {
 Write-Log "Set OpenSSH default shell to PowerShell Core"
 $pwshPath = (Get-Command "pwsh.exe").Path
 if (Test-Path $pwshPath) {
-  Set-RegistryKey -Path "HKLM:\SOFTWARE\OpenSSH" -Name DefaultShell -Value "C:\Program Files\PowerShell\7\pwsh.exe" -Type String
+  Set-RegistryKey -Path "HKLM:\SOFTWARE\OpenSSH" -Name DefaultShell -Value $pwshPath -Type String
 }
 else {
   Write-Log "Couldn't get Path for powershell core. Skipping" -Level "Error"
