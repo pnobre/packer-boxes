@@ -12,6 +12,6 @@ Vagrant.configure("2") do |config|
   config.vm.provider :vmware_desktop do |vw|
     vw.gui = false
     vw.memory = 4096
-    vw.cpus = "4"
+    vw.cpus = 4
   end
 end
