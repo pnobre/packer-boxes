@@ -92,7 +92,7 @@ $capabilities = @(
     'Hello.Face.18967'
     'Hello.Face.Migration.18967'
     'Hello.Face.20134'
-    'Media.WindowsMediaPlayer'    
+    'Media.WindowsMediaPlayer'
 )
 
 $optionalFeatures = @(
