@@ -191,17 +191,18 @@ if ($Hypervisor -eq "virtualbox") {
 }
 
 elseif ($Hypervisor -eq "vmware") {
-  Write-Log "Installing VMWare Tools"
+  Write-Log "Installing VMware Tools"
   $vmwareToolsIsoPath = "$env:WinDir\Temp\VMwareTools.iso"
+  $vmwareToolsPath = $null
   $installed = $false
   if (Test-Path $vmwareToolsIsoPath) {
-    Write-Log "Found VMWare Tools at $vmwareToolsIsoPath. Mounting as drive..."
+    Write-Log "Found VMware Tools at $vmwareToolsIsoPath. Mounting as drive..."
     $mountResult = Mount-DiskImage -ImagePath $vmwareToolsIsoPath -PassThru
     $driveLetter = ($mountResult | Get-Volume).DriveLetter
     $vmwareToolsPath = "$($driveLetter):\setup.exe"
   }
   else {
-    Write-Log "VMWare Tools ISO not found at $vmwareToolsIsoPath. Searching removable drives..."
+    Write-Log "VMware Tools ISO not found at $vmwareToolsIsoPath. Searching removable drives..."
     $volumes = Get-Volume | Where-Object { $_.DriveType -ne 'Fixed' -and $_.DriveLetter }
     foreach ($volume in $volumes) {
       $driveLetter = $volume.DriveLetter
@@ -211,17 +212,17 @@ elseif ($Hypervisor -eq "vmware") {
       }
     }
   }
-  if (Test-Path $vmwareToolsPath) {
-    Write-Log "Found VMWare Tools at $vmwareToolsPath. Installing..."
+  if ($vmwareToolsPath -and (Test-Path $vmwareToolsPath)) {
+    Write-Log "Found VMware Tools at $vmwareToolsPath. Installing..."
     Start-Process -FilePath $vmwareToolsPath -ArgumentList '/S /v "/qn REBOOT=R"' -Wait
     $installed = $true
   }
   
   if ($installed) {
-    Write-Log "VMWare Tools installed successfully."
+    Write-Log "VMware Tools installed successfully."
   }
   else {
-    Write-Log "VMWare Tools not found on any removable drive." -Level "Error"
+    Write-Log "VMware Tools not found on any removable drive." -Level "Error"
   }
 }
 
