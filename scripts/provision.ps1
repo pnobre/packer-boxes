@@ -213,7 +213,6 @@ elseif ($Hypervisor -eq "vmware") {
   }
   if (Test-Path $vmwareToolsPath) {
     Write-Log "Found VMWare Tools at $vmwareToolsPath. Installing..."
-    $certs = "${driveLetter}:\cert"
     Start-Process -FilePath $vmwareToolsPath -ArgumentList '/S /v "/qn REBOOT=R"' -Wait
     $installed = $true
   }
