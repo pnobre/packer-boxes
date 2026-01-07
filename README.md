@@ -57,7 +57,7 @@ choco install windows-adk-oscdimg
 - **Vagrant**: https://www.vagrantup.com/downloads
 - **VirtualBox**: https://www.virtualbox.org/wiki/Downloads
 - **VMware Workstation**: https://www.vmware.com/products/workstation/workstation-pro.html
-- **oscdimg**: Install via WinGet (`Microsoft.OSCDIMG`) or as part of Windows ADK
+- **oscdimg**:  https://learn.microsoft.com/en-us/windows-hardware/get-started/adk-install (select "Deployment Tools" component, which includes oscdimg)
 
 ### Install Build Tools
 
