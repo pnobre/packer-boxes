@@ -58,30 +58,6 @@ choco install windows-adk-oscdimg
 - **VirtualBox**: https://www.virtualbox.org/wiki/Downloads
 - **VMware Workstation**: https://www.vmware.com/products/workstation/workstation-pro.html
 - **oscdimg**: Install via WinGet (`Microsoft.OSCDIMG`) or as part of Windows ADK
-#### Option 1: Using WinGet (Recommended)
-```powershell
-winget install HashiCorp.Packer
-winget install HashiCorp.Vagrant
-winget install Oracle.VirtualBox
-# OR for VMware instead of VirtualBox:
-# winget install VMware.WorkstationPro
-```
-
-#### Option 2: Using Chocolatey
-```powershell
-choco install packer
-choco install vagrant
-choco install virtualbox
-# OR for VMware instead of VirtualBox:
-# choco install vmware-workstation-pro
-```
-
-#### Option 3: Manual Installation
-- **Packer**: https://www.packer.io/downloads
-- **Vagrant**: https://www.vagrantup.com/downloads
-- **VirtualBox**: https://www.virtualbox.org/wiki/Downloads
-- **VMware Workstation**: https://www.vmware.com/products/workstation/workstation-pro.html
-- **oscdimg**: https://learn.microsoft.com/en-us/windows-hardware/get-started/adk-install (select "Deployment Tools" component which includes oscdimg)
 
 ### Install Build Tools
 
